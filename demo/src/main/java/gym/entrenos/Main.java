@@ -3,9 +3,11 @@ package gym.entrenos;
 import gym.entrenos.gestores.GestionEntrenosService;
 import gym.entrenos.gestores.GestorUsuarios;
 import gym.entrenos.gestores.GestorRevisiones;
+import gym.entrenos.gestores.GestorRutinas;
 import gym.entrenos.nutricion.*;
 import gym.entrenos.rutinas.*;
 import gym.entrenos.usuarios.Cliente;
+import gym.entrenos.usuarios.Equipo;
 import gym.entrenos.revisiones.Revision;
 
 import java.time.LocalDate;
@@ -16,7 +18,14 @@ import java.util.List;
 // dasdasdasda
 
 public class Main {
-    public static void main(String[] args) {
+    private GestorRutinas grutinas = new GestorRutinas();
+    private GestorUsuarios gestorUsuarios = new GestorUsuarios();
+    private GestorRevisiones gestorRevisiones = new GestorRevisiones(this.gestorUsuarios);
+
+
+    // Desarollar menu para miembors de Equipo y Clientes
+
+    public void main(String[] args) {
         // 1. Prueba de conexión a la base de datos
         testDatabaseConnection();
         
@@ -51,13 +60,14 @@ public class Main {
         }
     }
 
-    private static void testGestorUsuarios() {
+    private void testGestorUsuarios() {
         System.out.println("\n=== Probando Gestor de Usuarios ===");
         GestorUsuarios gestorUsuarios = new GestorUsuarios();
         
         // Crear clientes de prueba
         Cliente cliente1 = new Cliente(100, "Juan", "Pérez", "555-1234", "juan@email.com", "hash123");
         Cliente cliente2 = new Cliente(101, "Ana", "Gómez", "555-5678", "ana@email.com", "hash456");
+        Equipo equ = new Equipo(101, "Ana", "Gómez", "555-5678", "ana@email.com", "hash456");
         
         // Dar de alta clientes
         gestorUsuarios.altaCliente(cliente1);
@@ -71,6 +81,8 @@ public class Main {
         
         // Contar clientes
         System.out.println("Total clientes: " + gestorUsuarios.getTotalClientes());
+
+        equ.asignarRutina(cliente1, this.grutinas.getTodasRutinas().get(0));
         
         // Intentar duplicado (debería fallar por email único)
         try {
@@ -143,13 +155,13 @@ public class Main {
         );
     }
 
-    private static void testGestorRevisiones() {
+    private void testGestorRevisiones() {
         System.out.println("\n=== Probando Gestor de Revisiones ===");
-        GestorUsuarios gestorUsuarios = new GestorUsuarios();
-        GestorRevisiones gestorRevisiones = new GestorRevisiones(gestorUsuarios);
+        
+        
         
         // Crear cliente para la revisión (si no existe)
-        Cliente clienteRevision = gestorUsuarios.buscarClientePorId(200);
+        Cliente clienteRevision = this.gestorUsuarios.buscarClientePorId(200);
         if (clienteRevision == null) {
             clienteRevision = new Cliente(200, "Carlos", "López", "555-9999", "carlos@email.com", "hash789");
             gestorUsuarios.altaCliente(clienteRevision);

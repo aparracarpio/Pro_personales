@@ -82,4 +82,7 @@ public class Rutina {
     public void limpiarEjercicios() {
         ejercicios.clear();
     }
+
+
+    // getters y setters especificos para funciones como un ejercicio en concreto 
 }

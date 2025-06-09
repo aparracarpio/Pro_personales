@@ -104,13 +104,15 @@ public class GestorRutinas {
         }
         
         // Relacionar ejercicio con rutina
-        String sql = "INSERT INTO rutina_ejercicios (id_rutina, id_ejercicio) VALUES (?, ?)";
+        String sql = "INSERT INTO rutina_ejercicios (id_rutina, id_ejercicio, series, repeticiones) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, idRutina);
             pstmt.setInt(2, idEjercicio);
+            pstmt.setInt(3, ejercicio.getSeries());
+            pstmt.setInt(4, ejercicio.getRepeticiones());
             pstmt.executeUpdate();
         }
     }
